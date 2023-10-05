@@ -132,11 +132,9 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = models[indexPath.section].options[indexPath.row]
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
-        
         if model.title == "Авиарежим" {
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
@@ -150,10 +148,17 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         }   else {
             cell.accessoryView = nil
         }
-        
         cell.configure(model: model)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let model = models[indexPath.section].options[indexPath.row]
+        print("Нажата кнопка -> \(model.title)")
+        model.handler()
+    }
+    
     
     @objc func toggleAirplane(_ sender: UISwitch) {
         self.enableAirplane = sender.isOn
