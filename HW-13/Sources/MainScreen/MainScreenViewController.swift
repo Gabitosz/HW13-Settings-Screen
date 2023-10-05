@@ -20,7 +20,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         return table
     }()
     
-    var models = [SettingsSection]()
+    var sections = [SettingsSection]()
     // MARK: Lifecycle
     
     override func viewDidLoad() {
@@ -33,13 +33,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         setupHierarchy()
         setupLayout()
         configure()
-        
-        
     }
     
     func configure() {
         
-        models.append(SettingsSection(options: [
+        sections.append(SettingsSection(options: [
             SettingsOption(title: "Авиарежим", icon: UIImage(named: "airplane"), iconBackgroundColor: UIColor(red: 240 / 255, green: 154 / 255, blue: 54 / 255, alpha: 1)){
                 
             },
@@ -65,7 +63,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         ]))
         
-        models.append(SettingsSection(options: [
+        sections.append(SettingsSection(options: [
             SettingsOption(title: "Уведомления", icon: UIImage(named: "notification"), iconBackgroundColor: UIColor(red: 235 / 255, green: 77 / 255, blue: 60 / 255, alpha: 1)){
                 
             },
@@ -83,7 +81,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         ]))
         
-        models.append(SettingsSection(options: [
+        sections.append(SettingsSection(options: [
             SettingsOption(title: "Основные", icon: UIImage(named: "settings"), iconBackgroundColor: UIColor(red: 142 / 255, green: 142 / 255, blue: 146 / 255, alpha: 1)){
                 
             },
@@ -105,8 +103,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             },
             
         ]))
-        
-        
     }
     
     // MARK: Setup
@@ -123,24 +119,24 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: - Actions
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return models.count
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return models[section].options.count
+        return sections[section].options.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = models[indexPath.section].options[indexPath.row]
+        let setting = sections[indexPath.section].options[indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
-        if model.title == "Авиарежим" {
+        if setting.title == "Авиарежим" {
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
             switchView.addTarget(self, action: #selector(toggleAirplane), for: .valueChanged)
             cell.accessoryView = switchView
-        }  else if model.title == "VPN" {
+        }  else if setting.title == "VPN" {
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
             switchView.addTarget(self, action: #selector(toggleVPN), for: .valueChanged)
@@ -148,15 +144,15 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         }   else {
             cell.accessoryView = nil
         }
-        cell.configure(model: model)
+        cell.configure(with: setting)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let model = models[indexPath.section].options[indexPath.row]
-        print("Нажата кнопка -> \(model.title)")
-        model.handler()
+        let section = sections[indexPath.section].options[indexPath.row]
+        print("Нажата кнопка -> \(section.title)")
+        section.handler()
     }
     
     

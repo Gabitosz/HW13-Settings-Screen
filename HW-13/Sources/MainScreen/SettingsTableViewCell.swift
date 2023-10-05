@@ -8,6 +8,7 @@
 import UIKit
 
 class SettingsTableViewCell: UITableViewCell {
+    
     static let identifier = "SettingsTableViewCell"
     
     private let label: UILabel = {
@@ -62,10 +63,10 @@ class SettingsTableViewCell: UITableViewCell {
         iconContainer.backgroundColor = nil
     }
     
-    public func configure(model: SettingsOption) {
-        label.text = model.title
-        iconImageView.image = model.icon
-        iconContainer.backgroundColor = model.iconBackgroundColor
+    public func configure(with setting: SettingsOption) {
+        label.text = setting.title
+        iconImageView.image = setting.icon
+        iconContainer.backgroundColor = setting.iconBackgroundColor
         
     }
 }
