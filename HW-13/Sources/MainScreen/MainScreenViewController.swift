@@ -25,18 +25,22 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = "Настройки"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        self.tableView.rowHeight = 44;
         tableView.delegate = self
         tableView.dataSource = self
+        setupView()
         setupHierarchy()
         setupLayout()
         configure()
     }
     
     // MARK: Setup
+    
+    private func setupView() {
+        view.backgroundColor = .white
+        title = "Настройки"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        self.tableView.rowHeight = 44;
+    }
     
     private func setupHierarchy() {
         view.addSubview(tableView)
