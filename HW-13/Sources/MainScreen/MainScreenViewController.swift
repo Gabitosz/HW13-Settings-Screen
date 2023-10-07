@@ -106,7 +106,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         
         if setting.title == "Авиарежим" {
-            let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 5, height: cell.contentView.bounds.height))
+            let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
             blockView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
@@ -116,7 +116,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             blockView.addSubview(switchView)
             
         }  else if setting.title == "VPN" {
-            let blockView = UIView(frame: CGRect(x: 0, y: 220 , width: cell.contentView.bounds.width + 5, height: cell.contentView.bounds.height))
+            let blockView = UIView(frame: CGRect(x: 0, y: 220 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
             blockView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
