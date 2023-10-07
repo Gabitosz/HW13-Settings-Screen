@@ -11,6 +11,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var enableAirplane = false
     var enableVPN = false
+    var sections = [SettingsSection]()
     
     // MARK: Outlets
     
@@ -20,7 +21,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         return table
     }()
     
-    var sections = [SettingsSection]()
     // MARK: Lifecycle
     
     override func viewDidLoad() {
@@ -28,6 +28,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         view.backgroundColor = .white
         title = "Настройки"
         navigationController?.navigationBar.prefersLargeTitles = true
+        self.tableView.rowHeight = 44;
         tableView.delegate = self
         tableView.dataSource = self
         setupHierarchy()
@@ -35,26 +36,35 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         configure()
     }
     
+    // MARK: Setup
+    
+    private func setupHierarchy() {
+        view.addSubview(tableView)
+    }
+    
+    private func setupLayout() {
+        tableView.frame = view.bounds
+    }
+    
     func configure() {
         
         sections.append(SettingsSection(options: [
-            SettingsOption(title: "Авиарежим", icon: UIImage(named: "airplane"), iconBackgroundColor: UIColor(red: 240 / 255, green: 154 / 255, blue: 54 / 255, alpha: 1)){
+            SettingsOption(title: "Авиарежим", icon: UIImage(systemName: "airplane"), iconBackgroundColor: UIColor(red: 240 / 255, green: 154 / 255, blue: 54 / 255, alpha: 1)){
                 
             },
             
-            SettingsOption(title: "Wi-Fi", icon: UIImage(named: "wifi"), iconBackgroundColor: UIColor(red: 52 / 255, green: 120 / 255, blue: 246 / 255, alpha: 1)){
+            SettingsOption(title: "Wi-Fi", icon: UIImage(systemName: "wifi"), detail: "Не подключено", iconBackgroundColor: UIColor(red: 52 / 255, green: 120 / 255, blue: 246 / 255, alpha: 1)){
+            },
+            
+            SettingsOption(title: "Bluetooth", icon: UIImage(named: "bluetooth"), detail: "Вкл.", iconBackgroundColor: UIColor(red: 52 / 255, green: 120 / 255, blue: 246 / 255, alpha: 1)){
                 
             },
             
-            SettingsOption(title: "Bluetooth", icon: UIImage(named: "bluetooth"), iconBackgroundColor: UIColor(red: 52 / 255, green: 120 / 255, blue: 246 / 255, alpha: 1)){
+            SettingsOption(title: "Сотовая связь", icon: UIImage(systemName: "antenna.radiowaves.left.and.right"), iconBackgroundColor: UIColor(red: 101 / 255, green: 196 / 255, blue: 102 / 255, alpha: 1)){
                 
             },
             
-            SettingsOption(title: "Сотовая связь", icon: UIImage(named: "cellular"), iconBackgroundColor: UIColor(red: 101 / 255, green: 196 / 255, blue: 102 / 255, alpha: 1)){
-                
-            },
-            
-            SettingsOption(title: "Режим модема", icon: UIImage(named: "modem"), iconBackgroundColor: UIColor(red: 101 / 255, green: 196 / 255, blue: 102 / 255, alpha: 1)){
+            SettingsOption(title: "Режим модема", icon: UIImage(systemName: "personalhotspot"), iconBackgroundColor: UIColor(red: 101 / 255, green: 196 / 255, blue: 102 / 255, alpha: 1)){
                 
             },
             
@@ -82,11 +92,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         ]))
         
         sections.append(SettingsSection(options: [
-            SettingsOption(title: "Основные", icon: UIImage(named: "settings"), iconBackgroundColor: UIColor(red: 142 / 255, green: 142 / 255, blue: 146 / 255, alpha: 1)){
+            SettingsOption(title: "Основные", icon: UIImage(named: "settings"), notificationBadge: 1, iconBackgroundColor: UIColor(red: 142 / 255, green: 142 / 255, blue: 146 / 255, alpha: 1)){
                 
             },
             
-            SettingsOption(title: "Пункт управления", icon: UIImage(named: "switch"), iconBackgroundColor: UIColor(red: 142 / 255, green: 142 / 255, blue: 146 / 255, alpha: 1)){
+            SettingsOption(title: "Пункт управления", icon: UIImage(systemName: "switch.2"), iconBackgroundColor: UIColor(red: 142 / 255, green: 142 / 255, blue: 146 / 255, alpha: 1)){
                 
             },
             
@@ -105,17 +115,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         ]))
     }
     
-    // MARK: Setup
-    
-    private func setupHierarchy() {
-        view.addSubview(tableView)
-    }
-    
-    private func setupLayout() {
-        tableView.frame = view.bounds
-        
-    }
-    
     // MARK: - Actions
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -131,6 +130,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
+        
         if setting.title == "Авиарежим" {
             let switchView = UISwitch(frame: .zero)
             switchView.setOn(false, animated: true)
@@ -166,12 +166,14 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailView = DetailViewController()
         tableView.deselectRow(at: indexPath, animated: true)
         let section = sections[indexPath.section].options[indexPath.row]
         print("Нажата кнопка -> \(section.title)")
         section.handler()
+        detailView.dataToPass = section
+        navigationController?.pushViewController(detailView, animated: true)
     }
-    
     
     @objc func toggleAirplane(_ sender: UISwitch) {
         self.enableAirplane = sender.isOn
@@ -181,7 +183,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     @objc func toggleVPN(_ sender: UISwitch) {
         self.enableVPN = sender.isOn
         print(enableVPN)
-    } 
+    }
 }
 
 // Setting
