@@ -18,6 +18,12 @@ class SettingsTableViewCell: UITableViewCell {
         
     }()
     
+    private let accessoryLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .white
@@ -35,7 +41,7 @@ class SettingsTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        let views = [label, iconContainer]
+        let views = [label, iconContainer, accessoryLabel]
         iconContainer.addSubview(iconImageView)
         views.forEach { contentView.addSubview($0) }
         contentView.clipsToBounds = true
@@ -53,6 +59,8 @@ class SettingsTableViewCell: UITableViewCell {
         let imageSize: CGFloat = size / 1.5
         iconImageView.frame = CGRect(x: (size-imageSize) / 2, y: (size-imageSize) / 2, width: imageSize, height: imageSize)
         label.frame = CGRect(x: 25 + iconContainer.frame.size.width, y: 0, width: contentView.frame.width - 25 - iconContainer.frame.size.width, height: contentView.frame.size.height)
+        accessoryLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
+        accessoryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         
     }
     
@@ -61,12 +69,14 @@ class SettingsTableViewCell: UITableViewCell {
         iconImageView.image = nil
         label.text = nil
         iconContainer.backgroundColor = nil
+        accessoryLabel.text = nil
     }
     
     public func configure(with setting: SettingsOption) {
         label.text = setting.title
         iconImageView.image = setting.icon
         iconContainer.backgroundColor = setting.iconBackgroundColor
+        accessoryLabel.text = setting.detail
         
     }
 }

@@ -144,6 +144,23 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         }   else {
             cell.accessoryView = nil
         }
+        
+        if let badgeNotification = setting.notificationBadge {
+            let badgeNotificationButton = UIButton(type: .system)
+            var config = UIButton.Configuration.filled()
+            
+            config.title = String(badgeNotification)
+            config.baseBackgroundColor = .systemRed
+            config.buttonSize = .mini
+            badgeNotificationButton.configuration = config
+            cell.addSubview(badgeNotificationButton)
+            
+            badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
+            badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 310).isActive = true
+            badgeNotificationButton.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor).isActive = true
+            badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8).isActive = true
+        }
+        
         cell.configure(with: setting)
         return cell
     }
@@ -172,6 +189,8 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
 struct SettingsOption {
     let title: String
     let icon: UIImage?
+    var detail: String?
+    var notificationBadge: Int?
     let iconBackgroundColor: UIColor
     let handler: (() -> Void)
 }
