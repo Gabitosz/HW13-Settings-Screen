@@ -34,12 +34,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        if let data = dataToPass {
-            settingLabel.text = "Вы выбрали -> \(data.title)"
-            iconImage.image = data.icon
-            iconImage.backgroundColor = data.iconBackgroundColor
-        }
+        fetchData()
         setupHierarchy()
         setupLayout()
     }
@@ -61,5 +56,13 @@ class DetailViewController: UIViewController {
             iconImage.widthAnchor.constraint(equalToConstant: 45),
             iconImage.heightAnchor.constraint(equalToConstant: 45),
         ])
+    }
+    
+    private func fetchData() {
+        if let data = dataToPass {
+            settingLabel.text = "Вы выбрали -> \(data.title)"
+            iconImage.image = data.icon
+            iconImage.backgroundColor = data.iconBackgroundColor
+        }
     }
 }
