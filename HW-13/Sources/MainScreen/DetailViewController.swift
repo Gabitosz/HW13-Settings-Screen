@@ -8,7 +8,7 @@
 import UIKit
 
 class DetailViewController: UIViewController {
-
+    
     var dataToPass: SettingsOption?
     
     // MARK: Outlets

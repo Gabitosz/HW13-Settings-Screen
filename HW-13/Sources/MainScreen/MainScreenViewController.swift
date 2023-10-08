@@ -52,6 +52,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func configure() {
         sections.append(SettingsSection(options: [
+            
             SettingsOption(title: "Авиарежим", icon: "airplane", iconBackgroundColor: MyColor.orange, iconIsFromAssets: false),
             
             SettingsOption(title: "Wi-Fi", icon: "wifi", detail: "Не подключено", iconBackgroundColor: MyColor.blue, iconIsFromAssets:  false),
@@ -63,9 +64,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             SettingsOption(title: "Режим модема", icon: "personalhotspot", iconBackgroundColor: MyColor.green, iconIsFromAssets: false),
             
             SettingsOption(title: "VPN", icon: "vpn", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true)
+            
         ]))
         
         sections.append(SettingsSection(options: [
+            
             SettingsOption(title: "Уведомления", icon: "notification", iconBackgroundColor: MyColor.red, iconIsFromAssets: true),
             
             SettingsOption(title: "Звуки, тактильные сигналы", icon: "speaker.wave.3.fill", iconBackgroundColor: MyColor.red, iconIsFromAssets: false),
@@ -73,9 +76,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             SettingsOption(title: "Не беспокоить", icon: "moon.fill", iconBackgroundColor: MyColor.purple, iconIsFromAssets: false),
             
             SettingsOption(title: "Экранное время", icon: "hourglass", iconBackgroundColor: MyColor.purple, iconIsFromAssets: false)
+            
         ]))
         
         sections.append(SettingsSection(options: [
+            
             SettingsOption(title: "Основные", icon: "settings", notificationBadge: 1, iconBackgroundColor: MyColor.gray, iconIsFromAssets: true),
             
             SettingsOption(title: "Пункт управления", icon: "switch.2", iconBackgroundColor: MyColor.gray, iconIsFromAssets: false),
@@ -104,6 +109,8 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
+        
+        // Добавление Switch
         
         if setting.title == "Авиарежим" {
             let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
