@@ -25,7 +25,6 @@ class DetailViewController: UIViewController {
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-    
         return imageView
     }()
     
@@ -33,7 +32,7 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         fetchData()
         setupHierarchy()
         setupLayout()
