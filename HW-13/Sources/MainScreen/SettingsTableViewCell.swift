@@ -65,8 +65,12 @@ class SettingsTableViewCell: UITableViewCell {
     
     public func configure(with setting: SettingsOption) {
         label.text = setting.title
-        iconImageView.image = setting.icon
-        iconContainer.backgroundColor = setting.iconBackgroundColor
+        if setting.iconIsFromAssets {
+            iconImageView.image = UIImage(named: setting.icon ?? "heart.fill")
+        } else {
+            iconImageView.image = UIImage(systemName: setting.icon ?? "heart.fill")
+        }
+        iconContainer.backgroundColor = setting.iconBackgroundColor.value
         accessoryLabel.text = setting.detail
     }
 }
