@@ -11,13 +11,14 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var enableAirplane = false
     var enableVPN = false
-    var sections = [SettingsSection]()
+    var sections = SettingsOption.settings
     
     // MARK: Outlets
     
     private let tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
+        let table = UITableView(frame: .zero, style: .insetGrouped)
         table.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
+        table.rowHeight = 44
         return table
     }()
     
@@ -30,7 +31,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         setupView()
         setupHierarchy()
         setupLayout()
-        configure()
     }
     
     // MARK: Setup
@@ -39,7 +39,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         view.backgroundColor = .white
         title = "Настройки"
         navigationController?.navigationBar.prefersLargeTitles = true
-        self.tableView.rowHeight = 44;
     }
     
     private func setupHierarchy() {
@@ -50,50 +49,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.frame = view.bounds
     }
     
-    func configure() {
-        sections.append(SettingsSection(options: [
-            
-            SettingsOption(title: "Авиарежим", icon: "airplane", iconBackgroundColor: MyColor.orange, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Wi-Fi", icon: "wifi", detail: "Не подключено", iconBackgroundColor: MyColor.blue, iconIsFromAssets:  false),
-            
-            SettingsOption(title: "Bluetooth", icon: "bluetooth", detail: "Вкл.", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true),
-            
-            SettingsOption(title: "Сотовая связь", icon: "antenna.radiowaves.left.and.right", iconBackgroundColor: MyColor.green, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Режим модема", icon: "personalhotspot", iconBackgroundColor: MyColor.green, iconIsFromAssets: false),
-            
-            SettingsOption(title: "VPN", icon: "vpn", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true)
-            
-        ]))
-        
-        sections.append(SettingsSection(options: [
-            
-            SettingsOption(title: "Уведомления", icon: "notification", iconBackgroundColor: MyColor.red, iconIsFromAssets: true),
-            
-            SettingsOption(title: "Звуки, тактильные сигналы", icon: "speaker.wave.3.fill", iconBackgroundColor: MyColor.red, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Не беспокоить", icon: "moon.fill", iconBackgroundColor: MyColor.purple, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Экранное время", icon: "hourglass", iconBackgroundColor: MyColor.purple, iconIsFromAssets: false)
-            
-        ]))
-        
-        sections.append(SettingsSection(options: [
-            
-            SettingsOption(title: "Основные", icon: "settings", notificationBadge: 1, iconBackgroundColor: MyColor.gray, iconIsFromAssets: true),
-            
-            SettingsOption(title: "Пункт управления", icon: "switch.2", iconBackgroundColor: MyColor.gray, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Экран и яркость", icon: "textformat.size", iconBackgroundColor: MyColor.blue, iconIsFromAssets: false),
-            
-            SettingsOption(title: "Экран «Домой»", icon: "home", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true),
-            
-            SettingsOption(title: "Универсальный доступ", icon: "universalAccess", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true),
-            
-        ]))
-    }
-    
     // MARK: - Actions
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,11 +56,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].options.count
+        return sections[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let setting = sections[indexPath.section].options[indexPath.row]
+        let setting = sections[indexPath.section][indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
@@ -146,7 +101,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
             cell.addSubview(badgeNotificationButton)
             
             badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
-            badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 310).isActive = true
+            badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 280).isActive = true
             badgeNotificationButton.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor).isActive = true
             badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8).isActive = true
         }
@@ -157,7 +112,7 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailView = DetailViewController()
         tableView.deselectRow(at: indexPath, animated: true)
-        let section = sections[indexPath.section].options[indexPath.row]
+        let section = sections[indexPath.section][indexPath.row]
         
         print("Нажата кнопка -> \(section.title)")
         detailView.dataToPass = section

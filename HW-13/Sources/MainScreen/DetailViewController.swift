@@ -9,7 +9,20 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
-    var dataToPass: SettingsOption?
+    var dataToPass: SettingsOption?  {
+        didSet {
+            if let data = dataToPass {
+                settingLabel.text = "Вы выбрали -> \(data.title)"
+                if data.iconIsFromAssets {
+                    iconImage.image = UIImage(named: data.icon ?? "heart.fill")
+                } else {
+                    iconImage.image = UIImage(systemName: data.icon ?? "heart.fill")
+                }
+                
+                iconImage.backgroundColor = data.iconBackgroundColor.value
+            }
+        }
+    }
     
     // MARK: Outlets
     
@@ -46,7 +59,6 @@ class DetailViewController: UIViewController {
     }
     
     private func setupLayout() {
-        iconImage.contentMode = .scaleAspectFit
         NSLayoutConstraint.activate([
             settingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             settingLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -57,16 +69,16 @@ class DetailViewController: UIViewController {
         ])
     }
     
-    private func fetchData() {
-        if let data = dataToPass {
-            settingLabel.text = "Вы выбрали -> \(data.title)"
-            if data.iconIsFromAssets {
-                iconImage.image = UIImage(named: data.icon ?? "heart.fill")
-            } else {
-                iconImage.image = UIImage(systemName: data.icon ?? "heart.fill")
+        private func fetchData() {
+            if let data = dataToPass {
+                settingLabel.text = "Вы выбрали -> \(data.title)"
+                if data.iconIsFromAssets {
+                    iconImage.image = UIImage(named: data.icon ?? "heart.fill")
+                } else {
+                    iconImage.image = UIImage(systemName: data.icon ?? "heart.fill")
+                }
+    
+                iconImage.backgroundColor = data.iconBackgroundColor.value
             }
-            
-            iconImage.backgroundColor = data.iconBackgroundColor.value
         }
-    }
 }

@@ -48,6 +48,7 @@ class SettingsTableViewCell: UITableViewCell {
         accessoryType = .disclosureIndicator
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
