@@ -34,8 +34,8 @@ class SettingsView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
-     func setupHierarchy() {
+    
+    func setupHierarchy() {
         addSubview(tableView)
         setupLayout()
     }
@@ -55,11 +55,11 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sections[section].count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let setting = sections[indexPath.section][indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
@@ -88,7 +88,7 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
         }   else {
             cell.accessoryView = nil
         }
-
+        
         if let badgeNotification = setting.notificationBadge {
             let badgeNotificationButton = UIButton(type: .system)
             var config = UIButton.Configuration.filled()
@@ -97,8 +97,8 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
             config.buttonSize = .mini
             badgeNotificationButton.configuration = config
             cell.addSubview(badgeNotificationButton)
-
-
+            
+            
             badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 270),
@@ -108,7 +108,7 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
                 badgeNotificationButton.heightAnchor.constraint(equalToConstant: 20)
             ])
         }
-
+        
         cell.configure(with: setting)
         return cell
     }

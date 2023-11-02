@@ -70,16 +70,16 @@ class DetailViewController: UIViewController {
         ])
     }
     
-        private func fetchData() {
-            if let data = dataToPass {
-                settingLabel.text = "Вы выбрали -> \(data.title)"
-                if data.iconIsFromAssets {
-                    iconImage.image = UIImage(named: data.icon ?? "heart.fill")
-                } else {
-                    iconImage.image = UIImage(systemName: data.icon ?? "heart.fill")
-                }
-    
-                iconImage.backgroundColor = data.iconBackgroundColor.value
+    private func fetchData() {
+        if let data = dataToPass {
+            settingLabel.text = "Вы выбрали -> \(data.title)"
+            if data.iconIsFromAssets {
+                iconImage.image = UIImage(named: data.icon ?? "heart.fill")
+            } else {
+                iconImage.image = UIImage(systemName: data.icon ?? "heart.fill")
             }
+            
+            iconImage.backgroundColor = data.iconBackgroundColor.value
         }
+    }
 }
