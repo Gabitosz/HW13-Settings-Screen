@@ -7,43 +7,46 @@
 
 import UIKit
 
+protocol SettingsViewDelegate: AnyObject {
+    func selectedCell(setting: SettingsOption)
+}
+
 class SettingsView: UIView {
     
     var enableAirplane = false
     var enableVPN = false
-    var tableView: UITableView?
     var sections = SettingsOption.settings
+    weak var delegate: SettingsViewDelegate?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupUI()
-    }
-
-     func setupUI() {
-        tableView = UITableView()
-        guard var tableView = tableView else { return }
-        tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
         tableView.rowHeight = 44
         tableView.delegate = self
         tableView.dataSource = self
+        return tableView
+    }()
     
-         
-        addSubview(tableView)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
-        // Добавьте AutoLayout-констрейнты для таблицы, чтобы она занимала весь экран.
+     func setupHierarchy() {
+        addSubview(tableView)
+        setupLayout()
+    }
+    
+    func setupLayout() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 35)
         ])
     }
 }
@@ -62,12 +65,6 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
-        
-        
-
-        // Оставьте код для настройки ячеек (включая Switch) и обработки действий здесь.
-        
-        // Добавление Switch
         
         if setting.title == "Авиарежим" {
             let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
@@ -101,23 +98,19 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
             badgeNotificationButton.configuration = config
             cell.addSubview(badgeNotificationButton)
 
-            // Добавьте AutoLayout-констрейнты для badgeNotificationButton здесь.
 
             badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 270),  // Расположение справа от контента ячейки
-                badgeNotificationButton.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),  // Расположение по центру ячейки
+                badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 270),
+                badgeNotificationButton.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
                 badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 12),
-                badgeNotificationButton.widthAnchor.constraint(equalToConstant: 20),  // Ширина кнопки
-                badgeNotificationButton.heightAnchor.constraint(equalToConstant: 20)  // Высота кнопки
+                badgeNotificationButton.widthAnchor.constraint(equalToConstant: 20),
+                badgeNotificationButton.heightAnchor.constraint(equalToConstant: 20)
             ])
-
         }
 
         cell.configure(with: setting)
         return cell
-        
-        
     }
     
     @objc func toggleAirplane(_ sender: UISwitch) {
@@ -128,6 +121,12 @@ extension SettingsView: UITableViewDelegate, UITableViewDataSource {
     @objc func toggleVPN(_ sender: UISwitch) {
         self.enableVPN = sender.isOn
         print(enableVPN)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedSetting = sections[indexPath.section][indexPath.row]
+        delegate?.selectedCell(setting: selectedSetting)
     }
 }
 

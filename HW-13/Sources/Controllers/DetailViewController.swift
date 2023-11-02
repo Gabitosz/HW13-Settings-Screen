@@ -21,6 +21,8 @@ class DetailViewController: UIViewController {
                 
                 iconImage.backgroundColor = data.iconBackgroundColor.value
             }
+            
+            fetchData()
         }
     }
     
@@ -46,7 +48,6 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        fetchData()
         setupHierarchy()
         setupLayout()
     }
