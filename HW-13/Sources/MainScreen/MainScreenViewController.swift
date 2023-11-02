@@ -7,134 +7,81 @@
 
 import UIKit
 
-class MainScreenViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainScreenViewController: UIViewController, UITableViewDelegate {
+   
     
-    var enableAirplane = false
-    var enableVPN = false
-    var sections = SettingsOption.settings
-    
-    // MARK: Outlets
-    
-    private let tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .insetGrouped)
-        table.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
-        table.rowHeight = 44
-        return table
-    }()
-    
-    // MARK: Lifecycle
+    var sections = [SettingsSection]()
+    // Добавьте свойство для SettingsView
+    private let settingsView = SettingsView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        setupView()
-        setupHierarchy()
-        setupLayout()
+        
+        // Добавьте SettingsView как подвид внутри MainScreenViewController
+        view.addSubview(settingsView)
+        
+        // Вызовите метод настройки SettingsView
+        settingsView.setupUI()
+       
+        setupUI()
+        view = settingsView
+        settingsView.tableView?.delegate = self
+        
+        //Looks for single or multiple taps.
+//             let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+//
+//            //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+//            //tap.cancelsTouchesInView = false
+//
+//            view.addGestureRecognizer(tap)
+        
+        
+       
+        print(settingsView.tableView?.delegate)
     }
     
-    // MARK: Setup
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+            // Проверяем, что таблица загружена
+            if let tableView = settingsView.tableView {
+                // Устанавливаем контроллер как делегата
+                print("here")
+                tableView.delegate = self
+                tableView.reloadData() // Можно вызвать reloadData() после установки делегата
+            }
+    }
+
+    // Остальной код MainScreenViewController...
     
-    private func setupView() {
-        view.backgroundColor = .white
+    private func setupUI() {
+        // Настройки для MainScreenViewController
+       
+        view.backgroundColor = .systemBackground
         title = "Настройки"
         navigationController?.navigationBar.prefersLargeTitles = true
+       
     }
+ 
     
-    private func setupHierarchy() {
-        view.addSubview(tableView)
-    }
-    
-    private func setupLayout() {
-        tableView.frame = view.bounds
-    }
-    
-    // MARK: - Actions
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let setting = sections[indexPath.section][indexPath.row]
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
-            return UITableViewCell()
-        }
-        
-        // Добавление Switch
-        
-        if setting.title == "Авиарежим" {
-            let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
-            blockView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
-            let switchView = UISwitch(frame: .zero)
-            switchView.setOn(false, animated: true)
-            switchView.addTarget(self, action: #selector(toggleAirplane), for: .valueChanged)
-            cell.accessoryView = switchView
-            tableView.addSubview(blockView)
-            blockView.addSubview(switchView)
-            
-        }  else if setting.title == "VPN" {
-            let blockView = UIView(frame: CGRect(x: 0, y: 220 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
-            blockView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
-            let switchView = UISwitch(frame: .zero)
-            switchView.setOn(false, animated: true)
-            switchView.addTarget(self, action: #selector(toggleVPN), for: .valueChanged)
-            cell.accessoryView = switchView
-            tableView.addSubview(blockView)
-            blockView.addSubview(switchView)
-        }   else {
-            cell.accessoryView = nil
-        }
-        
-        if let badgeNotification = setting.notificationBadge {
-            let badgeNotificationButton = UIButton(type: .system)
-            var config = UIButton.Configuration.filled()
-            
-            config.title = String(badgeNotification)
-            config.baseBackgroundColor = .systemRed
-            config.buttonSize = .mini
-            badgeNotificationButton.configuration = config
-            cell.addSubview(badgeNotificationButton)
-            
-            badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
-            badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 280).isActive = true
-            badgeNotificationButton.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor).isActive = true
-            badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8).isActive = true
-        }
-        cell.configure(with: setting)
-        return cell
-    }
-    
+}
+
+extension MainScreenViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        
+        print("hre")
         let detailView = DetailViewController()
         tableView.deselectRow(at: indexPath, animated: true)
-        let section = sections[indexPath.section][indexPath.row]
+        print(tableView)
+        let section = sections[indexPath.section].options[indexPath.row]
         
         print("Нажата кнопка -> \(section.title)")
         detailView.dataToPass = section
         navigationController?.pushViewController(detailView, animated: true)
-    }
-    
-    // MARK: Actions
-    
-    @objc func toggleAirplane(_ sender: UISwitch) {
-        self.enableAirplane = sender.isOn
-        print(enableAirplane)
-    }
-    
-    @objc func toggleVPN(_ sender: UISwitch) {
-        self.enableVPN = sender.isOn
-        print(enableVPN)
+
     }
 }
 
-// Section
 
-struct SettingsSection {
-    let options: [SettingsOption]
-}
+
 

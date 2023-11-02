@@ -57,3 +57,7 @@ extension SettingsOption {
           SettingsOption(title: "Универсальный доступ", icon: "universalAccess", iconBackgroundColor: MyColor.blue, iconIsFromAssets: true)]]
     }
 }
+
+struct SettingsSection {
+    let options: [SettingsOption]
+}
