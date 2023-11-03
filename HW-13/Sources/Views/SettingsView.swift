@@ -1,56 +1,57 @@
 //
-//  ViewController.swift
+//  SettingsView.swift
 //  HW-13
 //
-//  Created by Gabriel Zdravkovici on 01.10.2023.
+//  Created by Gabriel Zdravkovici on 02.11.2023.
 //
 
 import UIKit
 
-class MainScreenViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol SettingsViewDelegate: AnyObject {
+    func selectedCell(setting: SettingsOption)
+}
+
+class SettingsView: UIView {
     
     var enableAirplane = false
     var enableVPN = false
     var sections = SettingsOption.settings
+    weak var delegate: SettingsViewDelegate?
     
-    // MARK: Outlets
-    
-    private let tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .insetGrouped)
-        table.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
-        table.rowHeight = 44
-        return table
-    }()
-    
-    // MARK: Lifecycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifier)
+        tableView.rowHeight = 44
         tableView.delegate = self
         tableView.dataSource = self
-        setupView()
-        setupHierarchy()
+        return tableView
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    func setupHierarchy() {
+        addSubview(tableView)
         setupLayout()
     }
     
-    // MARK: Setup
-    
-    private func setupView() {
-        view.backgroundColor = .white
-        title = "Настройки"
-        navigationController?.navigationBar.prefersLargeTitles = true
+    func setupLayout() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 35)
+        ])
     }
-    
-    private func setupHierarchy() {
-        view.addSubview(tableView)
-    }
-    
-    private func setupLayout() {
-        tableView.frame = view.bounds
-    }
-    
-    // MARK: - Actions
-    
+}
+
+extension SettingsView: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
@@ -64,8 +65,6 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as? SettingsTableViewCell else {
             return UITableViewCell()
         }
-        
-        // Добавление Switch
         
         if setting.title == "Авиарежим" {
             let blockView = UIView(frame: CGRect(x: 0, y: 0 , width: cell.contentView.bounds.width + 2, height: cell.contentView.bounds.height))
@@ -93,33 +92,26 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         if let badgeNotification = setting.notificationBadge {
             let badgeNotificationButton = UIButton(type: .system)
             var config = UIButton.Configuration.filled()
-            
             config.title = String(badgeNotification)
             config.baseBackgroundColor = .systemRed
             config.buttonSize = .mini
             badgeNotificationButton.configuration = config
             cell.addSubview(badgeNotificationButton)
             
+            
             badgeNotificationButton.translatesAutoresizingMaskIntoConstraints = false
-            badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 280).isActive = true
-            badgeNotificationButton.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor).isActive = true
-            badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 8).isActive = true
+            NSLayoutConstraint.activate([
+                badgeNotificationButton.leftAnchor.constraint(equalTo: cell.contentView.leftAnchor, constant: 270),
+                badgeNotificationButton.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+                badgeNotificationButton.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 12),
+                badgeNotificationButton.widthAnchor.constraint(equalToConstant: 20),
+                badgeNotificationButton.heightAnchor.constraint(equalToConstant: 20)
+            ])
         }
+        
         cell.configure(with: setting)
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailView = DetailViewController()
-        tableView.deselectRow(at: indexPath, animated: true)
-        let section = sections[indexPath.section][indexPath.row]
-        
-        print("Нажата кнопка -> \(section.title)")
-        detailView.dataToPass = section
-        navigationController?.pushViewController(detailView, animated: true)
-    }
-    
-    // MARK: Actions
     
     @objc func toggleAirplane(_ sender: UISwitch) {
         self.enableAirplane = sender.isOn
@@ -130,11 +122,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
         self.enableVPN = sender.isOn
         print(enableVPN)
     }
-}
-
-// Section
-
-struct SettingsSection {
-    let options: [SettingsOption]
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedSetting = sections[indexPath.section][indexPath.row]
+        delegate?.selectedCell(setting: selectedSetting)
+    }
 }
 

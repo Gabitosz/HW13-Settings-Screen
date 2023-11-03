@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		031E37292AD32E1000A213A2 /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031E37282AD32E1000A213A2 /* SettingsOption.swift */; };
 		031E372B2AD3305600A213A2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031E372A2AD3305600A213A2 /* Colors.swift */; };
+		0388E3DA2AF30434006C5444 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0388E3D92AF30434006C5444 /* SettingsView.swift */; };
 		03B342B72ACC9A4000231229 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B342B62ACC9A4000231229 /* SettingsTableViewCell.swift */; };
 		03B342BF2ACF47E800231229 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B342BE2ACF47E800231229 /* DetailViewController.swift */; };
 		03B6CE262AC9DC7C00FA01B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B6CE252AC9DC7C00FA01B9 /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		031E37282AD32E1000A213A2 /* SettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		031E372A2AD3305600A213A2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		0388E3D92AF30434006C5444 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		03B342B62ACC9A4000231229 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		03B342BE2ACF47E800231229 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		03B6CE222AC9DC7C00FA01B9 /* HW-13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HW-13.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +53,24 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		0388E3D72AF2F2D2006C5444 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0388E3D92AF30434006C5444 /* SettingsView.swift */,
+				03B342B62ACC9A4000231229 /* SettingsTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0388E3D82AF2F352006C5444 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				03B6CE292AC9DC7C00FA01B9 /* MainScreenViewController.swift */,
+				03B342BE2ACF47E800231229 /* DetailViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		03B6CE192AC9DC7C00FA01B9 = {
 			isa = PBXGroup;
 			children = (
@@ -79,9 +99,10 @@
 		03FBC9EA2AC9E59700E3128C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0388E3D82AF2F352006C5444 /* Controllers */,
+				0388E3D72AF2F2D2006C5444 /* Views */,
 				031E37272AD32DEF00A213A2 /* Models */,
 				03FBC9EB2AC9E5A700E3128C /* App */,
-				03FBC9EC2AC9E5BA00E3128C /* MainScreen */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -93,16 +114,6 @@
 				03B6CE272AC9DC7C00FA01B9 /* SceneDelegate.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		03FBC9EC2AC9E5BA00E3128C /* MainScreen */ = {
-			isa = PBXGroup;
-			children = (
-				03B6CE292AC9DC7C00FA01B9 /* MainScreenViewController.swift */,
-				03B342B62ACC9A4000231229 /* SettingsTableViewCell.swift */,
-				03B342BE2ACF47E800231229 /* DetailViewController.swift */,
-			);
-			path = MainScreen;
 			sourceTree = "<group>";
 		};
 		03FBC9ED2AC9E5E700E3128C /* Resources */ = {
@@ -187,6 +198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03B6CE2A2AC9DC7C00FA01B9 /* MainScreenViewController.swift in Sources */,
+				0388E3DA2AF30434006C5444 /* SettingsView.swift in Sources */,
 				03B6CE262AC9DC7C00FA01B9 /* AppDelegate.swift in Sources */,
 				03B342B72ACC9A4000231229 /* SettingsTableViewCell.swift in Sources */,
 				031E372B2AD3305600A213A2 /* Colors.swift in Sources */,
